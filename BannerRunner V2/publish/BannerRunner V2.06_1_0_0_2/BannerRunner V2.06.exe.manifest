@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly manifestVersion="1.0" xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asmv1:assemblyIdentity name="BannerRunner V2.06.exe" version="1.0.0.2" publicKeyToken="6d0a25e9ec8e2259" language="tr-TR" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="PSPH.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="BannerRunner V2.06" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="BannerRunner V2.06.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet class="System.Security.PermissionSet" version="1" Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="4" minorVersion="10" buildNumber="0" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="2.0.50727.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BannerRunner V2.06.exe" size="61440">
+      <assemblyIdentity name="BannerRunner V2.06" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>OCAxtSxNl87uAmIdx0fAxzIOOPk=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="PSPH.ico" size="3262">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>cv713NJB/0AzuL2K3PsA6NPnbkk=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=ANDURILL\bulutk" issuerKeyHash="0a85a03b72013c66037c695c4088b25f3c96460b" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>xfo7XKbVqLHQl7lGCdhw+/wdO+U=</DigestValue></Reference></SignedInfo><SignatureValue>M84UX1O6q0XJCw5ngjMUNPu9psFwIGD60FWRPi2OdWn7ZkJ6hr5bBx923r3HZf7SnGjeTTrT1b38MmOMatw3D8DgS3hT6ZSUyl+ah30xZFCtCpnhTLADuitBGg3zNYToooJrIGVJ49JgpjYT3gOrgXTpGrA4muEcVwM1pQh6SSc=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>ukM7BmJwiC5mBaYHvhUHwJup/2GUpUmbDXxqXq8LGYP5Y4C4lw+XvhMocObi6RnU9kiFFA4NWnFWWIFaH807ov8euvqXaV3KSKbHJ9b3masVPwMFZA7AjRv8TQ2SfljMomin4vUZB7+A+kqBiA1uLKijVk0Sw0W4SnCSs2fFzys=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="e53b1dfcfb70d80946b997d0b1a8d5a65c3bfac5" Description="" Url=""><as:assemblyIdentity name="BannerRunner V2.06.exe" version="1.0.0.2" publicKeyToken="6d0a25e9ec8e2259" language="tr-TR" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=ANDURILL\bulutk</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>NlcAvd0BSS7MFxaZo3869rRn8yI=</DigestValue></Reference></SignedInfo><SignatureValue>LJPvqhd3tLUAB87KrPtF/wa+CrXGGQroFNP9FKyVTOeulcHRraH8PcKI13EAbV8DDg8eF31iVF0kTZc0lGUZ8C4fEX/cxOA7T06QZR7pEUE+Znf28zmTOPLJdIp9JVaG7hsYJqtXBI2GWOqMMz872DVtmru+z47m5NR0inyerfw=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>ukM7BmJwiC5mBaYHvhUHwJup/2GUpUmbDXxqXq8LGYP5Y4C4lw+XvhMocObi6RnU9kiFFA4NWnFWWIFaH807ov8euvqXaV3KSKbHJ9b3masVPwMFZA7AjRv8TQ2SfljMomin4vUZB7+A+kqBiA1uLKijVk0Sw0W4SnCSs2fFzys=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBzTCCATqgAwIBAgIQoEfiRxFBP7lOVYc3rWG2lDAJBgUrDgMCHQUAMCkxJzAlBgNVBAMeHgBBAE4ARABVAFIASQBMAEwAXABiAHUAbAB1AHQAazAeFw0wNzA5MjAwNTQxMjNaFw0wODA5MTkxMTQxMjNaMCkxJzAlBgNVBAMeHgBBAE4ARABVAFIASQBMAEwAXABiAHUAbAB1AHQAazCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAukM7BmJwiC5mBaYHvhUHwJup/2GUpUmbDXxqXq8LGYP5Y4C4lw+XvhMocObi6RnU9kiFFA4NWnFWWIFaH807ov8euvqXaV3KSKbHJ9b3masVPwMFZA7AjRv8TQ2SfljMomin4vUZB7+A+kqBiA1uLKijVk0Sw0W4SnCSs2fFzysCAwEAATAJBgUrDgMCHQUAA4GBAKtMU+yl8vYU/ovExdOc13X/PlAc0YHepOvv3uemfuGR4cnAUlTgN+Q82a99A/KIu+6pioXckZUQKfjP+HdOOUqBSA87fJwq5PzBYBZlPTJ0NyQuM7ICXEEhwfb66iRW6tYqJ7EBazqYu7oURlKPAbwN2qN5PjF7W6qhJ3eoz4W5</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

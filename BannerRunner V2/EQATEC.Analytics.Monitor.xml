@@ -1,0 +1,675 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EQATEC.Analytics.Monitor</name>
+    </assembly>
+    <members>
+        <member name="T:EQATEC.Analytics.Monitor.AnalyticsMonitor">
+            <summary>
+            Implementing class for IAnalyticsMonitor. Coordinates the interaction between
+            the messaging subsystem, the statistics and the storage
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.IAnalyticsMonitor">
+            <summary>
+            The interface for the analytics monitor. Call Start to start using
+            the monitor. Start will attempt to send the latest statistics so it should
+            not be called before access to the internet is available.
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.Start">
+            <summary>
+            Call to start the monitor.
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackException(System.Exception)">
+            <summary>
+            Call to track an exception that occured in the application.
+            </summary>
+            <param name="exception">the exception to be tracked</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackException(System.Exception,System.String)">
+            <summary>
+            Call to track an exception that occured in the application.
+            </summary>
+            <param name="exception">the exception to be tracked</param>
+            <param name="message">information about the action being performed when the exception occurred in addition to time stamp and exception message, type and stack trace which are logged automatically</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackException(System.Exception,System.String,System.Object[])">
+            <summary>
+            Call to track an exception that occured in the application.
+            </summary>
+            <param name="exception">the exception to be tracked</param>
+            <param name="format">a formatting string containing the information about the action being performed when the exception occurred in addition to time stamp and exception message, type and stack trace which are logged automatically</param>
+            <param name="args">an object array containing zero or more objects to format</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackFeature(System.String)">
+            <summary>
+            Register a feature usage. Features can be structured in a hieracy using dot-notation.
+            For example use "export" to track all export operations as one, or use "export.html"
+            and "export.pdf" to track exports to html and pdf seperately such that they can be compared.<br/>
+            Do not, however, use freeform text, such as the name of file being exported to, as the featureName.
+            </summary>
+            <param name="featureName">The name of the feature. If it is null and empty the request is ignored.</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackFeatureStart(System.String)">
+            <summary>
+            Register the start of a feature usage. Use this with <see cref="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackFeatureStop(System.String)"/> to track
+            how long a feature is used.<br/>
+            Features can be structured in a hieracy using dot-notation.
+            For example use "export" to track all export operations as one, or use "export.html"
+            and "export.pdf" to track exports to html and pdf seperately such that they can be compared.<br/>
+            Do not, however, use freeform text, such as the name of file being exported to, as the featureName.
+            </summary>
+            <param name="featureName">The name of the feature. If it is null and empty the request is ignored.</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackFeatureStop(System.String)">
+            <summary>
+            Register the end of a feature usage stared by <see cref="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.TrackFeatureStart(System.String)"/>.
+            Call <c>TrackFeatureStop</c> before <c>Start</c> and <c>TrackFeatureStart</c> or calling
+            <c>TrackFeatureStop</c> multiple times have no effect.
+            All features are implicitly stopped by calling <see cref="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.Stop"/>.
+            </summary>
+            <param name="featureName">The name of the feature. If it is null and empty the request is ignored.</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.SendLog(System.String)">
+            <summary>
+            Send a log message to the server. Messages above 512 characters will be truncated
+            </summary>
+            <param name="logMessage">the log message to send to the server. Truncated if above 512 characters</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.SendLog(System.String,System.Object[])">
+            <summary>
+            Send a log message to the server. Messages above 512 characters will be truncated
+            </summary>
+            <param name="messageFormat">the log message to send to the server. Truncated if above 512 characters</param>
+            <param name="args">arguments to the message format</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IAnalyticsMonitor.Stop">
+            <summary>
+            Call to stop the monitor. Call will attempt to save any pending state
+            to the storage
+            </summary>
+        </member>
+        <member name="E:EQATEC.Analytics.Monitor.IAnalyticsMonitor.VersionAvailable">
+            <summary>
+            Raised when a version check has ended
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitor.#ctor(EQATEC.Analytics.Monitor.IStatisticsMonitor,EQATEC.Analytics.Monitor.ILogAnalyticsMonitor,EQATEC.Analytics.Monitor.InternalSettings)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="statisticsMonitor">the statistics monitor</param>
+            <param name="log">the logging interface</param>
+            <param name="internalSettings">the internal settings object</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitor.Start">
+            <summary>
+            Initializes the monitor
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitor.TrackFeature(System.String)">
+            <summary>
+            Regsiter a feature usage. Features can be structured in a hieracy using dot-notation.
+            For example use "export" to track all export operations as one, or use "export.html"
+            and "export.pdf" to track exports to html and pdf seperately such that they can be compared.<br/>
+            Do not, however, use freeform text, such as the name of file being exported to, as the featureName.
+            </summary>
+            <param name="featureName">The name of the feature. If it is null and empty the request is ignored.</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitor.Stop">
+            <summary>
+            Stop the Analytics monitor. Will attempt to write any pending
+            state to the storage
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitor.Stop(System.Int32)">
+            <summary>
+            Stop the Analytics monitor. Will attempt to write any pending
+            state to the storage
+            </summary>
+            <param name="timeout">The timeout in milliseconds for any server communication in progress</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitor.System#IDisposable#Dispose">
+            <summary>
+            Dispose the monitor
+            </summary>
+        </member>
+        <member name="E:EQATEC.Analytics.Monitor.AnalyticsMonitor.VersionAvailable">
+            <summary>
+            Event raised when a version check has ended, succesfully or not
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.AnalyticsMonitorFactory">
+            <summary>
+            Factory for creating IAnalyticsMonitor instances. Call with an instance of 
+            AnalyticsMonitorSettings to customize behavior
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitorFactory.Create(System.String)">
+            <summary>
+            Create an IAnalyticsMonitor instance using the default settings
+            </summary>
+            <param name="productId">the product ID</param>
+            <returns>an instance of the IAnalyticsMonitor interface</returns>
+            <exception cref="T:System.ArgumentException">thrown if product id provided valid have the wrong format (guid format expected)</exception>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitorFactory.Create(EQATEC.Analytics.Monitor.AnalyticsMonitorSettings)">
+            <summary>
+            Create an IAnalyticsMonitor instance using customized settings
+            </summary>
+            <param name="analyticsMonitorSettings">the settings to use for constructing the instance</param>
+            <returns>an instance of the IAnalyticsMonitor interface</returns>
+            <exception cref="T:System.ArgumentNullException">thrown if product the analyticsMonitorSettings is null</exception>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Model.AccessInfo.SetBlockingTime(System.TimeSpan)">
+            <summary>
+            Set a new blocking time
+            </summary>
+            <param name="time"></param>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.Model.AccessInfo.IsBlocking">
+            <summary>
+            Get if we are currently blocking
+            </summary>
+            <returns>true if we are blocked from sending</returns>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Storage.AtomicFileOperations.Save(System.String,System.Byte[])">
+            <summary>
+            Write an arbitraty file using the .bak scheme. Callers provide
+            a callback that is invoked when it's time to write file contents.
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.ILogAnalyticsMonitor">
+            <summary>
+            Interface used for outputting log messages internally from
+            AnalyticsMonitor.
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.ILogAnalyticsMonitor.LogMessage(System.String)">
+            <summary>
+            Logging a message. This is called for informative messages
+            internally in the analytics monitor. These are not error messages
+            but messages on specific actions being performed
+            </summary>
+            <param name="message">describes the action being performed</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.ILogAnalyticsMonitor.LogError(System.String)">
+            <summary>
+            Logging an error message. This is called when an error occurs
+            internally in the analytics monitor. The errorMessage will contain
+            a human readable error message describing the error
+            </summary>
+            <param name="errorMessage">describes the error message</param>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Messaging.IMessageFactory">
+            <summary>
+            Interface for a building messages to send
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.IStorage">
+            <summary>
+            A storage interface for loading and save data for a given product ID. Can be
+            implementing by external callers and passed into the AnalyticsMonitor through the
+            AnalyticsMonitorSettings instance
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IStorage.Save(System.Guid,System.Byte[])">
+            <summary>
+            Save data for a given product ID
+            </summary>
+            <param name="productID">the product ID</param>
+            <param name="data">the data to save</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.IStorage.Load(System.Guid)">
+            <summary>
+            Load existing data for product ID. If no data is available, implementors should
+            return null or an empty array
+            </summary>
+            <param name="productID">the product ID</param>
+            <returns>any previously persisted data</returns>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessageFactory.BuildStatisticsMessage(System.String,EQATEC.Analytics.Monitor.Model.Statistics,System.Boolean)">
+            <summary>
+            Create message for sending the current statistics to the server
+            </summary>
+            <param name="cookie"></param>
+            <param name="statistics">The statistics to send</param>
+            <param name="newDay"></param>
+            <returns>The message to send</returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Messaging.MessageReceiver">
+            <summary>
+            Class handling the reception and parsing of messages from server
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessageReceiver.#ctor(System.Int32,System.Version,EQATEC.Analytics.Monitor.ILogAnalyticsMonitor,EQATEC.Analytics.Monitor.Model.AccessInfo)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="messageFactoryVersion"></param>
+            <param name="currentVersion">the current version</param>
+            <param name="log">the logging interface</param>
+            <param name="accessInfo"></param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessageReceiver.ReceiveMessage(System.String)">
+            <summary>
+            Handles the reception of incoming payload from the server
+            </summary>
+            <param name="incomingMessagePayload">the incoming payload</param>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Messaging.MessageSender">
+            <summary>
+            Class handling the asynchronous sending of messages and forwarding received messages
+            to the IMessageReceiver
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessageSender.#ctor(EQATEC.Analytics.Monitor.ILogAnalyticsMonitor)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="log">the logging interface</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessageSender.SendMessage(System.Uri,System.Byte[],System.Action{System.String})">
+            <summary>
+            Send the message asynchronously and invokes the sendMessageCallback when message sending
+            has succeeded or failed
+            </summary>
+            <param name="baseUri"></param>
+            <param name="payload">the message to send</param>
+            <param name="sendMessageCallback">the callback</param>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Messaging.MessagingSubSystem">
+            <summary>
+            Class encapsulating the messaging system in the Analytics Monitor. This
+            class handles and coordinates to ensure that messages are send and retried
+            and eventually failed if unable to contact server
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessagingSubSystem.#ctor(EQATEC.Analytics.Monitor.Messaging.IMessageReceiver,EQATEC.Analytics.Monitor.Messaging.IMessageSender,EQATEC.Analytics.Monitor.Model.AccessInfo,System.Uri,EQATEC.Analytics.Monitor.ILogAnalyticsMonitor)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="receiver"></param>
+            <param name="sender"></param>
+            <param name="accessInfo"></param>
+            <param name="defaultUri"></param>
+            <param name="log"></param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Messaging.MessagingSubSystem.SendMessage(EQATEC.Analytics.Monitor.Messaging.MessagingSubSystem.Message,System.Action{System.String})">
+            <summary>
+            Send a message and return the SendResult in the callback
+            </summary>
+            <param name="message">The message to send</param>
+            <param name="callback">The callback</param>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Messaging.MessagingSubSystem.Message">
+            <summary>
+            Simple data carrying class for a message
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.NamespaceDoc">
+            <summary>
+            The <c>AnalyticsMonitor</c> namespace contains all classes and interfaces needed
+            to construct and work with the EQATEC Analytics Monitor
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.NativeMethods">
+            <summary>
+            Internal class for calling native methods
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.InternalSettings">
+            <summary>
+            Static class for holding the internal settings such as string size constraints
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxExceptionStackTrace">
+            <summary>
+            Max size for the stack trace of exceptions
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxExceptionExtraInfo">
+            <summary>
+            Max size for the extra inforamtion supplied with exceptions
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxFeatureIdSize">
+            <summary>
+            Max size for the feature identifier in track
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxMessageAttempts">
+            <summary>
+            The number of times an individual message is attempted to be sent before
+            being abandoned
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxLogMessageLength">
+            <summary>
+            The maximum length of the log message
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxSessions">
+            <summary>
+            The maximum number of sessions to store
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxSessionExceptions">
+            <summary>
+            The maximum number of exceptions to store per session
+            </summary>
+        </member>
+        <member name="F:EQATEC.Analytics.Monitor.InternalSettings.MaxSessionLogs">
+            <summary>
+            The maximum number of log entries to store per session
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Timing">
+            <summary>
+            Static class for encapsulating all timing related issues in the 
+            code. Makes testing for timing related functionality easier to mock out
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Timing.SetSystemTimeCall(EQATEC.Analytics.Monitor.Timing.SystemTimeCall)">
+            <summary>
+            Explicitly setting the system time call
+            </summary>
+            <param name="call"></param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Timing.SetSystemUptimeCall(EQATEC.Analytics.Monitor.Timing.SystemUptimeCall)">
+            <summary>
+            Explicitly setting the system uptime call
+            </summary>
+            <param name="call"></param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Timing.GetWaitHandle">
+            <summary>
+            Getting a WaitHandle instance in the non-signalled state
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.Timing.Now">
+            <summary>
+            Getting the current system time
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.Timing.Uptime">
+            <summary>
+            Getting the current system uptime
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Timing.SystemTimeCall">
+            <summary>
+            Delegate for getting the current system time
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Timing.SystemUptimeCall">
+            <summary>
+            Delegate for getting the current system up time
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Timing.WaitHandleCall">
+            <summary>
+            Delegate for getting a concrete waithandle
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings">
+            <summary>
+            Class containing the settings used for constructing the AnalyticsMonitor instance. Instances
+            are preloaded with default settings which can be adjusted before instance is being passed to 
+            the AnalyticsMonitorFactory method
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.#ctor(System.String)">
+            <summary>
+             Construct the default settings corresponding to a given productId.
+            </summary>
+            <param name="productId">the id of the product to monitor</param>
+            <exception cref="T:System.ArgumentException">returned if product id have the wrong format</exception>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.Version">
+            <summary>
+            Specifies the version of the software, that should be used for version checking.
+            The default value is tmplicitly retreived of the current application
+            by accessing the calling assembly.
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.LoggingInterface">
+            <summary>
+            The logging interface used for exposing internal messages
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.Storage">
+            <summary>
+            The storage interface used internally in the analytics monitor
+            for saving and loading state.
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.StorageSaveInterval">
+            <summary>
+            The interval with which we autosave the internal statistics. The default
+            is one minute. If set to TimeSpan.Zero, no AutoSave is performed
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.ServerUri">
+            <summary>
+            Override the default uri for the server.
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.InstallationID">
+            <summary>
+            Optional installation identification which is sent to server in exchange for a 
+            cookie (if your product has been configured to use cookies). The length of the
+            installation identification is restricted to 50 characters. Please ensure to respect 
+            the privacy of the user when selecting the installation ID.
+            </summary>
+            <remarks>The installation ID will only be usefull if your product has been
+            configured on the server to accept user identification.</remarks>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings.TestMode">
+            <summary>
+             Use this flag to enable the test mode for this installation.
+             This might for example allow you to test version announcements
+             before relasing it to customers.
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.StatisticsMonitor">
+            <summary>
+            Class encapsulating the statistics state and the persistance of the state, including
+            the auto save
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.StatisticsMonitor.#ctor(EQATEC.Analytics.Monitor.Messaging.IMessageFactory,EQATEC.Analytics.Monitor.Messaging.IMessagingSubSystem,EQATEC.Analytics.Monitor.Storage.IStorageFactory,EQATEC.Analytics.Monitor.Model.AccessInfo,System.String,EQATEC.Analytics.Monitor.ILogAnalyticsMonitor,System.TimeSpan,EQATEC.Analytics.Monitor.InternalSettings)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="messageFactory"></param>
+            <param name="messagingSubSystem"></param>
+            <param name="storageFactory">the storage factory</param>
+            <param name="accessInfo"></param>
+            <param name="installationId"></param>
+            <param name="log">the logging interface</param>
+            <param name="autoSaveInterval">the autosave interva. Set to TimeSpan.Zero for no autosave</param>
+            <param name="internalSettings"></param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.StatisticsMonitor.StartSession">
+            <summary>
+            Starting a new session
+            </summary>
+            <returns>the statistics loaded for this sessions</returns>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.StatisticsMonitor.EndSession(System.Int32)">
+            <summary>
+            Ending a session
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.StatisticsMonitor.AddFeature(System.String)">
+            <summary>
+            Adding a feature
+            </summary>
+            <param name="featureName">the name of the feature</param>
+        </member>
+        <member name="E:EQATEC.Analytics.Monitor.StatisticsMonitor.VersionAvailable">
+            <summary>
+            Event raised when a version check ended
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.OSInfo">
+            <summary>
+            Class accessing the Operating System information
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.OSInfoObject">
+            <summary>
+            Simple data carrying class for OS information
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Storage.IsolatedStorageAdaptor">
+            <summary>
+            Storage implementation for the IsolatedStorage
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Storage.IsolatedStorageAdaptor.Save(System.Guid,System.Byte[])">
+            <summary>
+            Saves the data to a file specific for the product ID
+            </summary>
+            <param name="productID">the product ID</param>
+            <param name="data">the raw data</param>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Storage.IsolatedStorageAdaptor.Load(System.Guid)">
+            <summary>
+            Loads the data associated with the product ID. If no data can be located, returns null
+            </summary>
+            <param name="productID">the product ID</param>
+            <returns>the data for the prouct ID or null if no data can be found</returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Storage.StorageFactory">
+            <summary>
+            Class encapsulating the loading and saving of data to and from raw bytes
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Storage.StorageFactory.SaveStatistics(EQATEC.Analytics.Monitor.Model.Statistics,EQATEC.Analytics.Monitor.Model.AccessInfo)">
+            <summary>
+            Saves the statistics
+            </summary>
+            <param name="statistics">the statistics to save</param>
+            <param name="accessInfo">the access info to save</param>
+            <returns>the raw data to save or null if unable to convert</returns>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Storage.StorageFactory.LoadStatistics(EQATEC.Analytics.Monitor.Model.AccessInfo)">
+            <summary>
+            Loads the statistics and returns the alternativeUri and BlockingData
+            </summary>
+            <returns>The statistics or null if failed to convert</returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.VersionAvailableEventArgs">
+            <summary>
+            Event arguments for the version check event
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.#ctor(System.Version,System.String,System.String,System.Version,System.Boolean,System.DateTime,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="officialVersion">the official version</param>
+            <param name="downloadUri">the download uri</param>
+            <param name="description">the description of the new version</param>
+            <param name="currentVersion">the current version as sent to the server</param>
+            <param name="currentVersionDeprecated">whether the current version is deprecated</param>
+            <param name="releaseDate">the release date of the official version</param>
+            <param name="additionalInformation">additional information returned from the server</param>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.OfficialVersion">
+            <summary>
+            Get the version obtained from the server in the version check. 
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.DownloadUri">
+            <summary>
+            Get the Uri of the download location obtained from the server in the version check.
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.VersionDescription">
+            <summary>
+            Get the description of the newest version as obtained from the server in the version check.
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.CurrentVersionDeprecated">
+            <summary>
+            Get the deprecated status of your current version. The current version is considered
+            deprecated if it is mathcing a version marked as deprecated on the server
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.ReleaseDate">
+            <summary>
+            Get the release date of the official version
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.CurrentVersion">
+            <summary>
+            The current version as specified in the <see cref="T:EQATEC.Analytics.Monitor.AnalyticsMonitorSettings">AnalyticsMonitorSettings</see> object
+            used for initialization of the monitor instance
+            </summary>
+        </member>
+        <member name="P:EQATEC.Analytics.Monitor.VersionAvailableEventArgs.AdditionalInfo">
+            <summary>
+            Additional information passed to the client along with the version information. Can be
+            used to send custom formatted information from server to clients
+            </summary>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Guard">
+            <summary>
+            Internal class making ArgumentNull checks a little easier
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Guard.IsNotNull``1(``0,System.String)">
+            <summary>
+            Checks that argument is not null and returns it
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="input"></param>
+            <param name="argumentName"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.XmlUtil">
+            <summary>
+            internal class for doing some Xml manipulation
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.XmlUtil.WriteStartElement(System.Xml.XmlWriter,System.String,System.String[])">
+            <summary>
+            Adding a named XmlElement as a child to a XmlNode
+            </summary>
+            <param name="xtw"></param>
+            <param name="elementName"></param>
+            <param name="attrs"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EQATEC.Analytics.Monitor.Parser">
+            <summary>
+            Internal class for non throwing parsing
+            </summary>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.Parser.TryParseUint(System.String,System.UInt32@)">
+            <summary>
+            Special parsing of int to support both full and CF framework
+            </summary>
+            <param name="input"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EQATEC.Analytics.Monitor.StringUtil.Chop(System.String,System.Int32)">
+            <summary>
+            Chop the string to a given length
+            </summary>
+            <param name="input"></param>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

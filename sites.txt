@@ -1,0 +1,25 @@
+Registration
+
+http://suis.sabanciuniv.edu/prod/twbkwbis.P_GenMenu?name=bmenu.P_RegMnu
+
+
+Student Schedule by Day & Time
+http://suis.sabanciuniv.edu/prod/bwskfshd.P_CrseSchd
+
+
+Look-up Classes to Add
+http://suis.sabanciuniv.edu/prod/bwskfcls.p_sel_crse_search
+
+
+Add class
+http://suis.sabanciuniv.edu/prod/bwskfreg.P_AltPin
+
+
+
+304 = not modified
+200 = ok
+
+502 = DNS failed
+
+
+https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=bulutk%40gmail%2ecom&item_name=BannerRunner&no_shipping=0&no_note=1&tax=0&currency_code=USD&lc=TR&bn=PP%2dDonationsBF&charset=UTF%2d8
