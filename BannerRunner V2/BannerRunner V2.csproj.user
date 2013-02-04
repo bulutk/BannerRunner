@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>ftp://68.178.208.26/Bannerrunner3/|ftp://68.178.208.26/Bannerrunner4/|publish\</PublishUrlHistory>
+    <PublishUrlHistory>publish\|ftp://68.178.208.26/Bannerrunner3/|ftp://68.178.208.26/Bannerrunner4/</PublishUrlHistory>
     <InstallUrlHistory>http://www.bulutk.com/Bannerrunner3/|http://www.bulutk.com/Bannerrunner4/</InstallUrlHistory>
     <SupportUrlHistory>
     </SupportUrlHistory>

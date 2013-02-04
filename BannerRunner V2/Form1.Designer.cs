@@ -59,10 +59,12 @@ namespace BannerRunner_V3
             this.label9 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -114,7 +116,7 @@ namespace BannerRunner_V3
             // textBoxPIN
             // 
             this.textBoxPIN.Location = new System.Drawing.Point(63, 66);
-            this.textBoxPIN.MaxLength = 6;
+            this.textBoxPIN.MaxLength = 30;
             this.textBoxPIN.Name = "textBoxPIN";
             this.textBoxPIN.PasswordChar = '*';
             this.textBoxPIN.Size = new System.Drawing.Size(100, 20);
@@ -124,10 +126,11 @@ namespace BannerRunner_V3
             // textBoxUserID
             // 
             this.textBoxUserID.Location = new System.Drawing.Point(63, 39);
-            this.textBoxUserID.MaxLength = 9;
+            this.textBoxUserID.MaxLength = 30;
             this.textBoxUserID.Name = "textBoxUserID";
             this.textBoxUserID.Size = new System.Drawing.Size(100, 20);
             this.textBoxUserID.TabIndex = 2;
+            this.textBoxUserID.TextChanged += new System.EventHandler(this.textBoxUserID_TextChanged);
             // 
             // label12
             // 
@@ -215,7 +218,7 @@ namespace BannerRunner_V3
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Location = new System.Drawing.Point(12, 198);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(268, 53);
+            this.groupBox3.Size = new System.Drawing.Size(208, 53);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Statistics";
@@ -359,11 +362,25 @@ namespace BannerRunner_V3
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
+            this.pictureBox1.Location = new System.Drawing.Point(227, 202);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(52, 52);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 387);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -382,6 +399,7 @@ namespace BannerRunner_V3
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -417,6 +435,7 @@ namespace BannerRunner_V3
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBoxPIN;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

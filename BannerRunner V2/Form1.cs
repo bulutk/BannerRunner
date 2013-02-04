@@ -5,13 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using EQATEC.Analytics.Monitor;
 
 namespace BannerRunner_V3
 {
     public partial class Form1 : Form
     {
-        private EQATEC.Analytics.Monitor.IAnalyticsMonitor _Monitor; //web analytics
 
         System.Diagnostics.Stopwatch stopwatch;
         const int DEFAULT_RUNNER_COUNT = 10;
@@ -25,30 +23,14 @@ namespace BannerRunner_V3
 
         public Form1()
         {
-            _Monitor = EQATEC.Analytics.Monitor.AnalyticsMonitorFactory.Create("0FEF317EDE3844C28CE7AAAA6C07749D");
-            Monitor.Start();
-            Monitor.VersionAvailable += new EventHandler<EQATEC.Analytics.Monitor.VersionAvailableEventArgs>(_Monitor_VersionAvailable);
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => Monitor.TrackException(e.ExceptionObject as Exception);
-            Application.ThreadException += (s, e) => Monitor.TrackException(e.Exception);
-
             InitializeComponent();
 
             numberOfRunners = DEFAULT_RUNNER_COUNT;
-            UrlOfLogin = "http://suis.sabanciuniv.edu/prod/twbkwbis.P_SabanciLogin";
+            UrlOfLogin = "https://suis.sabanciuniv.edu/prod/twbkwbis.P_SabanciLogin";
             textBoxOfURL.Text = UrlOfLogin;
             textBox1.Text = DEFAULT_RUNNER_COUNT.ToString();
             sing = new Singer();
             totalTryNumber = 0;
-        }
-
-        public IAnalyticsMonitor Monitor
-        {
-            get { return _Monitor; }
-        }
-
-        void _Monitor_VersionAvailable(object sender, EQATEC.Analytics.Monitor.VersionAvailableEventArgs e)
-        {
-            MessageBox.Show("Version " + e.OfficialVersion + " is available");
         }
 
         public void PopMessageBox(string message)
@@ -61,11 +43,9 @@ namespace BannerRunner_V3
             if (textBoxUserID.Text == "" || textBoxPIN.Text == "")
             {
                 MessageBox.Show("You need to enter the UserID and the PIN to make the ninjas' succeed!");
-                _Monitor.TrackFeature("DidNotStart.NoIDPIN");
             }
             else
             {
-                _Monitor.TrackFeatureStart("main.run");
                 textTime.Text = "0";
                 TextCountNumber.Text = "0";
                 userID = textBoxUserID.Text;
@@ -84,7 +64,6 @@ namespace BannerRunner_V3
                     RunnerArray[i] = new Runner(this, i, UrlOfLogin, userID, PIN);
                     //  RunnerArray[i].Show();
                 }
-                _Monitor.TrackFeature("NumberOfRunners." + (numberOfRunners));
                 this.Focus();
             }
         }
@@ -129,9 +108,6 @@ namespace BannerRunner_V3
                             + "\r\nWinner runner: " + (RunnerID + 1).ToString()
                             + "\r\n------------------------------------------------------\r\n\r\n");
                     log.Close();
-
-                    _Monitor.TrackFeature("NumberOfTries." + (GlobalTryCount));
-                    _Monitor.TrackFeature("WinnerNo." + (RunnerID + 1));
                 }
                 catch (Exception E)
                 {
@@ -146,17 +122,14 @@ namespace BannerRunner_V3
         {
             if (radioButton1.Checked)
             {
-                Monitor.TrackFeature("Song.Winner");
                 sing.StartWinner();
             }
             else if (radioButton2.Checked)
             {
-                Monitor.TrackFeature("Song.ShortMario");
                 sing.StartShort();
             }
             else if (radioButton3.Checked)
             {
-                Monitor.TrackFeature("Song.LongMario");
                 sing.StartLong();
             }
         }
@@ -200,7 +173,6 @@ namespace BannerRunner_V3
                         + "\r\nFake login screen."
                         + "\r\n------------------------------------------------------\r\n\r\n");
                 log.Close();
-                _Monitor.TrackFeature("FakeLogin");
             }
             catch (Exception E)
             {
@@ -217,7 +189,6 @@ namespace BannerRunner_V3
                 MessageBox.Show("Invalid input!");
                 textBox1.Text = DEFAULT_RUNNER_COUNT.ToString();
                 numberOfRunners = DEFAULT_RUNNER_COUNT;
-                _Monitor.TrackFeature("DidNotStart.Invalid");
             }
             else
             {
@@ -226,7 +197,6 @@ namespace BannerRunner_V3
                     MessageBox.Show("Bannerweb e girmek istmiyorsun galiba?");
                     textBox1.Text = DEFAULT_RUNNER_COUNT.ToString();
                     numberOfRunners = DEFAULT_RUNNER_COUNT;
-                    _Monitor.TrackFeature("DidNotStart.NoRunner");
                 }
             }
         }
@@ -272,13 +242,11 @@ namespace BannerRunner_V3
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            _Monitor.TrackFeature("AboutClicked");
             new About().Show();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Monitor.Stop();
             sing.ShutUP();
         }
 
@@ -286,6 +254,21 @@ namespace BannerRunner_V3
         {
             if (e.KeyChar == (char)Keys.Return)
                 button1_Click(sender, new EventArgs());
+        }
+
+        private void textBoxUserID_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("https://www.facebook.com/Bannerrunner");
+            }
+            catch (Exception)
+            { }
         }
     }
 }

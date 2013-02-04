@@ -42,13 +42,12 @@ namespace BannerRunner_V3
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(50, 29);
+            this.label1.Location = new System.Drawing.Point(50, 35);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 104);
+            this.label1.Size = new System.Drawing.Size(200, 52);
             this.label1.TabIndex = 3;
-            this.label1.Text = "\r\nBir ders kayýt yardým programý..\r\n\r\nBu programýn kullanýmýndan doðabilecek \r\nhe" +
-                "rtürlü problemden kullanýcý sorumludur.\r\n\r\nHatalarý ve fikirlerinizi lütfen ilet" +
-                "in.\r\n\r\n";
+            this.label1.Text = "Bir ders kayit yardim programi..\r\n\r\nBu programin kullanimindan dogabilecek \r\nhert" +
+                "ürlü problemden kullanici sorumludur.";
             this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
